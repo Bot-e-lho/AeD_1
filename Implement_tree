@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Node
+{
+    int num;
+    struct Node* left;
+    struct Node* right;
+}Node;
+
+Node* create()
+{
+
+    return NULL;
+    
+}
+void insere( Node** no, int i)
+{
+    if ( *no == NULL ){
+        *no = (Node*)malloc(sizeof(Node));
+        (*no)->left = NULL;
+        (*no)->right = NULL;
+        (*no)->num = i;
+    } else {
+        if( i < (*no)->num ){
+            insere(&(*no)->left, i);
+        } else{
+            insere(&(*no)->right, i);
+        }
+    }
+
+}
+
+void mostra( Node* no ){
+    printf("<");
+        if( no != NULL ) {
+            printf("%d ", no->num);
+            mostra(no->left);
+            mostra(no->right);
+        }
+    printf(">"); 
+}
+
+int main(int argc, char const *argv[])
+{
+    Node* no = create();
+    insere(&no, 30);
+    insere(&no, 20);
+    insere(&no, 40);
+    insere(&no, 10);
+    insere(&no, 50);
+    insere(&no, 25);
+    insere(&no, 35);
+    mostra(no);
+
+    free(no);
+    return 0;
+}
