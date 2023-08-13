@@ -1,50 +1,62 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct Node
-{
-    int num;
+typedef long key;
+
+typedef struct Registro {
+    key num;
+} Registro;
+
+typedef struct Node {
+    Registro reg;
     struct Node* left;
     struct Node* right;
-}Node;
+} Node;
 
-Node* create()
-{
+typedef struct Node* apontador;
 
-    return NULL;
-    
+apontador create(key i) {
+    apontador no = (apontador)malloc(sizeof(struct Node));
+    if (no != NULL) {
+        no->reg.num = i;
+        no->left = NULL;
+        no->right = NULL;
+    }
+    return no;
 }
-void insere( Node** no, int i)
-{
-    if ( *no == NULL ){
-        *no = (Node*)malloc(sizeof(Node));
-        (*no)->left = NULL;
-        (*no)->right = NULL;
-        (*no)->num = i;
+
+void insere(Node** no, key i) {
+    if (*no == NULL) {
+        *no = create(i);
     } else {
-        if( i < (*no)->num ){
-            insere(&(*no)->left, i);
-        } else{
-            insere(&(*no)->right, i);
+        if (i < (*no)->reg.num) {
+            insere(&((*no)->left), i);
+        } else {
+            insere(&((*no)->right), i);
         }
     }
-
 }
 
-void mostra( Node* no ){
+void libera(Node* no) {
+    if (no != NULL) {
+        libera(no->left);
+        libera(no->right);
+        free(no);
+    }
+}
+
+void mostra(Node* no) {
     printf("<");
-        if( no != NULL ) {
-            printf("%d ", no->num);
-            mostra(no->left);
-            mostra(no->right);
-        }
-    printf(">"); 
+    if (no != NULL) {
+        printf("%ld ", no->reg.num);
+        mostra(no->left);
+        mostra(no->right);
+    }
+    printf(">");
 }
 
-int main(int argc, char const *argv[])
-{
-    Node* no = create();
-    insere(&no, 30);
+int main(int argc, char const* argv[]) {
+    Node* no = create(30);
     insere(&no, 20);
     insere(&no, 40);
     insere(&no, 10);
@@ -53,6 +65,6 @@ int main(int argc, char const *argv[])
     insere(&no, 35);
     mostra(no);
 
-    free(no);
+    libera(no);
     return 0;
 }
