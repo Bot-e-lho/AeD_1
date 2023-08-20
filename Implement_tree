@@ -3,68 +3,121 @@
 
 typedef long key;
 
-typedef struct Registro {
-    key num;
-} Registro;
-
 typedef struct Node {
-    Registro reg;
+    key num;
+    int height;
     struct Node* left;
     struct Node* right;
 } Node;
 
-typedef struct Node* apontador;
-
-apontador create(key i) {
-    apontador no = (apontador)malloc(sizeof(struct Node));
-    if (no != NULL) {
-        no->reg.num = i;
-        no->left = NULL;
-        no->right = NULL;
-    }
-    return no;
+int max(int a, int b) {
+    return (a > b) ? a : b;
 }
 
-void insere(Node** no, key i) {
-    if (*no == NULL) {
-        *no = create(i);
-    } else {
-        if (i < (*no)->reg.num) {
-            insere(&((*no)->left), i);
-        } else {
-            insere(&((*no)->right), i);
-        }
-    }
+int height(struct Node* node) {
+    if (node == NULL)
+        return 0;
+    return node->height;
 }
 
-void libera(Node* no) {
+Node* create(key a) {
+    Node* node = (Node*)malloc(sizeof(Node));
+    node->num = a;
+    node->height = 1;
+    node->left = NULL;
+    node->right = NULL;
+    return node;
+}
+
+Node* rot_left(Node* y) {
+    Node* x = y->right;
+    y->right = x->left;
+    x->left = y;
+    y->height = max(height(y->left), height(y->right)) + 1;
+    x->height = max(height(x->left), height(x->right)) + 1;
+    return x;
+}
+
+Node* rot_right(Node* x) {
+    Node* y = x->left;
+    x->left = y->right;
+    y->right = x;
+    x->height = max(height(x->left), height(x->right)) + 1;
+    y->height = max(height(y->left), height(y->right)) + 1;
+    return y;
+}
+
+int balance(Node* node) {
+    if (node == NULL)
+        return 0;
+    return height(node->left) - height(node->right);
+}
+
+Node* insere(Node* node, key a) {
+    if (node == NULL)
+        return create(a);
+
+    if (a < node->num)
+        node->left = insere(node->left, a);
+    else if (a > node->num)
+        node->right = insere(node->right, a);
+    else
+        return node;
+
+    node->height = 1 + max(height(node->left), height(node->right));
+
+    int balance = balance(node);
+
+    if (balance > 1 && a < node->left->num)
+        return rot_right(node);
+
+    if (balance < -1 && a > node->right->num)
+        return rot_left(node);
+
+    if (balance > 1 && a > node->left->num) {
+        node->left = rot_left(node->left);
+        return rot_right(node);
+    }
+
+    if (balance < -1 && a < node->right->num) {
+        node->right = rot_right(node->right);
+        return rot_left(node);
+    }
+
+    return node;
+}
+
+void freeTree(Node* no) {
     if (no != NULL) {
-        libera(no->left);
-        libera(no->right);
+        freeTree(no->left);
+        freeTree(no->right);
         free(no);
     }
 }
 
-void mostra(Node* no) {
-    printf("<");
+void print(Node* no) {
     if (no != NULL) {
-        printf("%ld ", no->reg.num);
-        mostra(no->left);
-        mostra(no->right);
+        print(no->left);
+        printf("%ld ", no->num);
+        print(no->right);
     }
-    printf(">");
 }
 
 int main(int argc, char const* argv[]) {
-    Node* no = create(30);
-    insere(&no, 20);
-    insere(&no, 40);
-    insere(&no, 10);
-    insere(&no, 50);
-    insere(&no, 25);
-    insere(&no, 35);
-    mostra(no);
+    Node* no = NULL;
 
-    libera(no);
+    no = insere(no, 30);
+    no = insere(no, 20);
+    no = insere(no, 40);
+    no = insere(no, 10);
+    no = insere(no, 50);
+    no = insere(no, 25);
+    no = insere(no, 35);
+
+    printf("\nArvore:\n");
+    print(no);
+    printf("\n");
+
+    freeTree(no);
     return 0;
 }
