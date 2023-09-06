@@ -1,0 +1,50 @@
+void merge(int array[], int left, int middle, int right);
+
+void mergeSort(int array[], int left, int right) {
+    if (left < right) {
+        int middle = left + (right - left) / 2; // Encontra o ponto médio do array
+        mergeSort(array, left, middle); // Ordena a primeira metade
+        mergeSort(array, middle + 1, right); // Ordena a segunda metade
+        merge(array, left, middle, right); // Mescla as duas metades ordenadas
+    }
+}
+
+void merge(int array[], int left, int middle, int right) {
+    int i, j, k;
+    int aux_left = middle - left + 1;
+    int aux_right = right - middle;
+    int L[aux_left], R[aux_right]; // Cria arrays temporários
+
+    for (i = 0; i < aux_left; i++) {// Copia os valores do array para arrays temporários
+        L[i] = array[left + i];
+    }
+    for (j = 0; j < aux_right; j++) {
+        R[j] = array[middle + 1 + j];
+    }
+
+    i = 0;
+    j = 0;
+    k = left;
+    while (i < aux_left && j < aux_right) {
+        if (L[i] <= R[j]) {
+            array[k] = L[i];
+            i++;
+        } else {
+            array[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+
+    while (i < aux_left) {
+        array[k] = L[i];
+        i++;
+        k++;
+    }
+
+    while (j < aux_right) {
+        array[k] = R[j];
+        j++;
+        k++;
+    }
+}
