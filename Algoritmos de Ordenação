@@ -1,58 +1,69 @@
-void insertionsort ( int array[], int n ){
-    int aux = 0;
+void insertionsort ( int array[], int n ){// um array de inteiros e seu tamanho
+    int aux = 0; // aux -- armazena temporariamente o valor a ser inserido na posição correta
     int j;
-    for ( int i = 0; i < n; i++ ) {
-          aux = array[i];
-          j = i - 1;
-          while ( array[j] > aux && j >= 0 ) {
-                  array[j + 1] = array[j];
-                  j = j - 1;
+    for ( int i = 0; i < n; i++ ) { // percorre a partir do primeiro elemento e o último elemento
+          aux = array[i]; // armazena o valor atual em aux
+          j = i - 1; // inicializa j como o índice anterior ao elemento atual
+          while ( array[j] > aux && j >= 0 ) { // compara aux com os elementos anteriores e move os elementos maiores para a direita 
+                  array[j + 1] = array[j]; // move o elemento maior para a direita
+                  j = j - 1; // move para o próximo elemento anterior
           }
-          array[j + 1] = aux;
+          array[j + 1] = aux; // insere na posição correta
     }
 
 }
 
-void selectionsort ( int array[], int n ) {
-    int min, temp;
-    for ( int i = 0; i < n - 1; i++ ) {
-          min = array[i];
+void selectionsort ( int array[], int n ) {// um array de inteiros e seu tamanho
+    int min, temp;//min para armazenar o índice do menor do valor e temp para trocar temporaria
+    for ( int i = 0; i < n - 1; i++ ) {//percorre até o penúltimo elemento
+          min = array[i]; // inicializa a variavel com o primeiro valor do array "sendo o menor"
           for ( int j = i + 1; j < n; j++ ) {
-                if ( array[j] < array[min] ) {
-                    min = j;
+                if ( array[j] < array[min] ) {// verifica se o valor atual é menor do que o indice min
+                    min = j; // min recebe j se for o caso
                 }
           }
-          temp = array[i];
-          array[i] = array[min];
-          array[min] = temp;
+          temp = array[i]; // realiza a troca entre o elemento atual e o minimo encontrado
+          array[i] = array[min]; // insere na posição correta 
+          array[min] = temp; // insere o valor original do elemento no lugar do minimo;
     }
 }
 
-void quicksort ( int array[], int left, int right ) {
+void quicksort ( int array[], int left, int right ) { // um array de inteiros, seu primeiro valor e o seu ultimo, respectivamente
     int i = left; 
     int j = right;
-    int meio = array[(left + right)/2];
+    int meio = array[(left + right)/2]; //elemento pivô
     do {
-        while ( array[i] < meio ) { 
+        while ( array[i] < meio ) { // encontra o primeiro elemento da esquerda que é maior ou igual ao pivô
               i++; 
         }
-        while( meio < array[j] ) {
+        while( meio < array[j] ) { // encontra o primeiro elemento da direita que é menor ou igual ao pivô
               j--; 
         } 
-        if ( i <= j ) { 
-            temp= array[i]; 
-            array[i] = array[j]; 
-            array[j] = temp; 
-            i++; 
-            j--;
+        if ( i <= j ) { // se os valores não se cruzarem
+            temp= array[i]; // Troca
+            array[i] = array[j]; //Os 
+            array[j] = temp; //Elementos
+            i++; // move para direita
+            j--; // move para esquerda
         }
-    } while ( i <= j );
-    if( left< j ) {
+    } while ( i <= j );// até que i seja igual ou maior que j
+    if( left < j ) { // recursão do lado esquerdo
         quicksort( array,left,j ); 
     }
-    if ( i < right ) {
+    if ( i < right ) { recursão do lado direito
         quicksort( array,i,right );
     }
 }
 
-void mergesort
+void bubbleSort(int array[], int n) {// um array de inteiros e seu tamanho
+    int temp; // variavel para trocar temporaria 
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (array[j] > array[j + 1]) { // verifica se o elemento atual é maior que o próximo
+                temp = array[j]; // Troca
+                array[j] = array[j + 1] // Os 
+                array[j + 1] = temp; // Elementos
+            }
+        }
+    }
+}
